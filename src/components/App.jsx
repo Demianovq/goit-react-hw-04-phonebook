@@ -5,21 +5,16 @@ import { FormContacts } from './form/form';
 import { Filter } from './Filter/Filter';
 
 export const App = () => {
-  const [contacts, setContacts] = useState([]);
+  const [contacts, setContacts] = useState(() => {
+    const savedContacts = localStorage.getItem('contacts');
+    return savedContacts !== null ? JSON.parse(savedContacts) : [];
+  });
   const [filter, setFilter] = useState('');
 
   useEffect(() => {
     const serializedState = JSON.stringify(contacts);
     localStorage.setItem('contacts', serializedState);
   }, [contacts]);
-
-  useEffect(() => {
-    const savedContacts = localStorage.getItem('contacts');
-    if (savedContacts) {
-      const parsedContacts = JSON.parse(savedContacts);
-      setContacts(parsedContacts);
-    }
-  }, []);
 
   const handleSubmit = (values, { resetForm }) => {
     let newContact = values;
